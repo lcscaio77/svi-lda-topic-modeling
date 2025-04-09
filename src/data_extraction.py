@@ -1,6 +1,7 @@
-import os, sys
+import os
 import json
 import warnings
+from pathlib import Path
 from bs4 import GuessedAtParserWarning
 
 import wikipedia
@@ -8,6 +9,9 @@ from wikipedia.exceptions import DisambiguationError, PageError
 
 
 warnings.filterwarnings("ignore", category=GuessedAtParserWarning)
+
+parent_dir = Path(__file__).resolve().parent.parent
+os.chdir(parent_dir)
 
 
 def get_wikipedia_page(title):
@@ -24,14 +28,14 @@ def get_wikipedia_page(title):
         return None
 
 
-def create_wikipedia_corpus(topics, n_articles_per_topics, folder_path="../data", output_file_name="wikipedia_corpus", verbose=True):
+def create_wikipedia_corpus(seeds, n_articles_per_topics, output_file_name="wikipedia_corpus", verbose=True):
     articles = {}
 
-    for topic in topics:
-        linked_topics = wikipedia.search(topic, results=n_articles_per_topics)
+    for seed in seeds:
+        linked_topics = wikipedia.search(seed, results=n_articles_per_topics)
 
         if verbose:
-            print(f'Pages linked with "{topic}":')
+            print(f'Pages linked with "{seed}":')
         for linked_topic in linked_topics:
             if verbose:
                 print(f"\t- {linked_topic}")
@@ -40,18 +44,19 @@ def create_wikipedia_corpus(topics, n_articles_per_topics, folder_path="../data"
 
             articles[page.title] = {
                 "title": page.title,
+                "seed": seed,
                 "url": page.url,
                 "content": page.content
             }
 
-    with open(f"{folder_path}/{output_file_name}.json", "w", encoding="utf-8") as f:
+    with open(f"data/{output_file_name}.json", "w", encoding="utf-8") as f:
         json.dump(articles, f, ensure_ascii=False, indent=2)
 
-    print(f'Corpus saved as "{output_file_name}.json" in : {os.path.abspath(folder_path)}.')
+    print(f'Corpus saved as "{output_file_name}.json" in : {os.path.abspath("data")}.')
 
 
 if __name__ == "__main__":
-    topics = [
+    seeds = [
         "culture",
         "history",
         "nature",
@@ -59,4 +64,4 @@ if __name__ == "__main__":
         "sports"
     ]
 
-    create_wikipedia_corpus(topics, 10)
+    create_wikipedia_corpus(seeds, 15)
