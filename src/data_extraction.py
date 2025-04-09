@@ -21,18 +21,18 @@ def get_wikipedia_page(title):
     
     except DisambiguationError as e:
         print(f'Warning: "{title}" topic is ambigious, replaced by "{e.options[0]}".')
-        return wikipedia.page(e.options[0], auto_suggest=False)
+        return get_wikipedia_page(e.options[0])
     
     except PageError:
         print(f'Error: Page "{title}" not found.')
         return None
 
 
-def create_wikipedia_corpus(seeds, n_articles_per_topics, output_file_name="wikipedia_corpus", verbose=True):
+def create_wikipedia_corpus(seeds, n_articles_per_seed, output_file_name="wikipedia_corpus", verbose=True):
     articles = {}
 
     for seed in seeds:
-        linked_topics = wikipedia.search(seed, results=n_articles_per_topics)
+        linked_topics = wikipedia.search(seed, results=n_articles_per_seed)
 
         if verbose:
             print(f'Pages linked with "{seed}":')
@@ -41,6 +41,8 @@ def create_wikipedia_corpus(seeds, n_articles_per_topics, output_file_name="wiki
                 print(f"\t- {linked_topic}")
 
             page = get_wikipedia_page(linked_topic)
+            if page is None:
+                continue
 
             articles[page.title] = {
                 "title": page.title,
@@ -57,11 +59,14 @@ def create_wikipedia_corpus(seeds, n_articles_per_topics, output_file_name="wiki
 
 if __name__ == "__main__":
     seeds = [
+        "business",
         "culture",
         "history",
+        "internet",
+        "language",
         "nature",
         "politics",
         "sports"
     ]
 
-    create_wikipedia_corpus(seeds, 15)
+    create_wikipedia_corpus(seeds, n_articles_per_seed=150)
