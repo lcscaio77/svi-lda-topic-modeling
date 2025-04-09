@@ -20,8 +20,12 @@ def get_wikipedia_page(title):
         return page
     
     except DisambiguationError as e:
-        print(f'Warning: "{title}" topic is ambigious, replaced by "{e.options[0]}".')
-        return get_wikipedia_page(e.options[0])
+        print(f'Warning: "{title}" is ambigious, replaced by "{e.options[0]}".')
+        if e.options[0] == title:
+             print(f'Warning: Couldn\'t resolve "{e.options[0]}".')
+             return None
+        else:
+            return get_wikipedia_page(e.options[0])
     
     except PageError:
         print(f'Error: Page "{title}" not found.')
