@@ -43,7 +43,7 @@ def plot_top_words_wordcloud(lambd, vocab, n_top_words=100, n_wordcloud=1):
         n_wordcloud (int, optional): Number of topic word clouds to display. Defaults to 1.
 
     Returns:
-        dict: Dictionary of word frequencies used in each word cloud, keyed by topic.
+        None
     """
     df_top_words = get_top_words(lambd, vocab, n_top_words)
 
@@ -60,7 +60,6 @@ def plot_top_words_wordcloud(lambd, vocab, n_top_words=100, n_wordcloud=1):
 
     _, axes = plt.subplots(nrows=n_wordcloud//2, ncols=2, figsize=(12, n_wordcloud*1.5))
     axes = axes.flatten()
-    print(len(axes))
 
     for i, topic in enumerate(wordclouds.keys()):
         wc = WordCloud(background_color="white", colormap="plasma").generate_from_frequencies(wordclouds[topic])
@@ -70,8 +69,6 @@ def plot_top_words_wordcloud(lambd, vocab, n_top_words=100, n_wordcloud=1):
         axes[i].set_title(f"Topic {i}")
 
     plt.show()
-
-    return wordclouds
 
 
 def get_topic_distrib_info(doc_topic_distrib, wiki_articles):
