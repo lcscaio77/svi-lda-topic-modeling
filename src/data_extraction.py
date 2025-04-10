@@ -15,6 +15,15 @@ os.chdir(parent_dir)
 
 
 def get_wikipedia_page(title):
+    """
+    Retrieves a Wikipedia page by title, handling disambiguation and missing pages.
+
+    Args:
+        title (str): The title of the Wikipedia page to retrieve.
+
+    Returns:
+        wikipedia.WikipediaPage or None: The Wikipedia page object if found, else None.
+    """
     try:
         page = wikipedia.page(title, auto_suggest=False)
         return page
@@ -33,6 +42,18 @@ def get_wikipedia_page(title):
 
 
 def create_wikipedia_corpus(seeds, n_articles_per_seed, output_file_name="wikipedia_corpus", verbose=True):
+    """
+    Builds a Wikipedia article corpus from seed topics and saves it as a JSON file.
+
+    Args:
+        seeds (list of str): Seed topics to search on Wikipedia.
+        n_articles_per_seed (int): Number of articles to retrieve per seed.
+        output_file_name (str, optional): Output JSON file name (without extension). Defaults to "wikipedia_corpus".
+        verbose (bool, optional): If True, prints progress. Defaults to True.
+
+    Returns:
+        None
+    """
     articles = {}
 
     for seed in seeds:
