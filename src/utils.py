@@ -1,8 +1,11 @@
-import pandas as pd
 import numpy as np
+import pandas as pd
 import plotly.express as px
 import matplotlib.pyplot as plt
 from wordcloud import WordCloud
+from scipy.spatial.distance import jensenshannon
+from gensim.corpora.dictionary import Dictionary
+from gensim.models.coherencemodel import CoherenceModel
 
 
 def get_top_words(lambd, vocab, n_top_words=100):
@@ -178,3 +181,55 @@ def plot_topics_distrib_by_seed(docs_info):
     fig.show()
 
     return df_topics_by_seed
+
+
+def compute_topic_coherence(lambd, vocab, corpus, n_top_words=100):
+    """
+    Compute the c_v topic coherence using gensim's CoherenceModel.
+
+    Args:
+        lambd (np.ndarray): Topic-word distribution matrix.
+        vocab (dict): Mapping from words to indices.
+        tokenized_docs (list of list of str): Tokenized documents.
+        n_top_words (int): Number of top words per topic to consider.
+
+    Returns:
+        float: Coherence score (c_v).
+    """
+    topics = get_top_words(lambd, vocab, n_top_words).T.values.tolist()
+
+    inv_vocab = {i: w for w, i in vocab.items()}
+    tokenized_docs = [[inv_vocab[word_id] for word_id in doc]for doc in corpus]
+
+    dictionary = Dictionary(tokenized_docs)
+    
+    coherence_model = CoherenceModel(
+        topics=topics,
+        texts=tokenized_docs,
+        dictionary=dictionary,
+        coherence='c_v'
+    )
+    
+    return coherence_model.get_coherence()
+
+
+def compute_average_js_divergence(lambd):
+    """
+    Compute the average Jensen-Shannon divergence between all topic distributions.
+
+    Args:
+        lambd (np.ndarray): Topic-word distribution matrix.
+
+    Returns:
+        float: Average JS divergence between topics.
+    """
+    topic_word_distributions = lambd / lambd.sum(axis=1, keepdims=True)
+    K = topic_word_distributions.shape[0]
+    js_scores = []
+
+    for i in range(K):
+        for j in range(i + 1, K):
+            js = jensenshannon(topic_word_distributions[i], topic_word_distributions[j])
+            js_scores.append(js)
+
+    return np.mean(js_scores)
