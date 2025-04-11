@@ -36,8 +36,8 @@ The algorithm is implemented from scratch in Python and applied to a custom corp
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/your-username/lda-svi-project.git
-cd lda-svi-project
+git clone https://github.com/your-username/svi-lda-topic-modeling.git
+cd svi-lda-topic-modeling
 ```
 
 2. Create and activate a virtual environment:
