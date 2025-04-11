@@ -116,12 +116,4 @@ This project was developed for the M2 master's course **"Méthodes de simulation
 
 Course GitHub: [https://github.com/sylvainlc/22-generative_models](https://github.com/sylvainlc/22-generative_models)
 
-It combines:
-- Probabilistic modeling
-- Variational inference
-- Natural language understanding
-- Data visualization
-
-into a reproducible and interpretable topic modeling pipeline.
-
 ---
