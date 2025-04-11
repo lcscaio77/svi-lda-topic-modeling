@@ -1,33 +1,38 @@
-# 📚 LDA Topic Modeling with Stochastic Variational Inference
+# LDA Topic Modeling with Stochastic Variational Inference
 
-This project implements the **Stochastic Variational Inference (SVI)** algorithm for **Latent Dirichlet Allocation (LDA)**, as introduced in the paper:
+This project implements the **Stochastic Variational Inference (SVI)** algorithm for **Latent Dirichlet Allocation (LDA)**, based on the foundational paper:
 
-> **Hoffman, M. D., Blei, D. M., Wang, C., & Paisley, J. (2013)**. Stochastic Variational Inference. *Journal of Machine Learning Research*.
+> **Hoffman, M. D., Blei, D. M., Wang, C., & Paisley, J. (2013)**. *Stochastic Variational Inference*. Journal of Machine Learning Research.
 
-The algorithm is implemented from scratch in Python and applied to a custom corpus of **Wikipedia articles** to discover latent semantic topics.
+While the article proposes a general framework for scalable variational inference, **this project focuses specifically on the application of SVI to topic modeling using LDA**.
+
+The algorithm is implemented from scratch in Python and applied to a custom corpus of **Wikipedia articles** to uncover latent thematic structures.
 
 ---
 
-## 📂 Project Structure
+## Project Structure
 
 ```
 .
-├── src/
-│   ├── data_preparation.py     # Text cleaning, tokenization, vectorization
-│   ├── lda_utils.py            # Core functions: Dirichlet, ELBO helpers, top words
-│   ├── svi.py                  # Main SVI algorithm for LDA
-│   └── visualization.py        # Plotting functions (wordclouds, pie charts, bar plots)
 ├── data/
-│   └── wikipedia_corpus.json   # Pre-extracted and cleaned Wikipedia articles
-├── notebook/
-│   └── lda_svi_analysis.ipynb  # Main report with code, results, and commentary
-├── README.md
-└── requirements.txt
+│   └── wikipedia_corpus.json        # Extracted and cleaned Wikipedia articles
+├── images/
+│   ├── barplot.png                  # Topics per seed
+│   ├── piechart.png                 # Topic frequency
+│   └── wordclouds.png               # Top words per topic
+├── src/
+│   ├── __init__.py                  # Declares src as a package
+│   ├── data_extraction.py           # Wikipedia scraping from seeds
+│   ├── data_preparation.py          # Tokenization and BOW vectorization
+│   ├── utils.py                     # Evaluation + visualization helpers
+├── lda_svi_report.ipynb             # Main report notebook (theoretical + code)
+├── requirements.txt
+└── README.md
 ```
 
 ---
 
-## 🧪 Setup & Installation
+## Setup & Installation
 
 1. Clone the repository:
 ```bash
@@ -35,90 +40,88 @@ git clone https://github.com/your-username/lda-svi-project.git
 cd lda-svi-project
 ```
 
-2. Create a virtual environment:
+2. Create and activate a virtual environment:
 ```bash
 python3 -m venv venv
 source venv/bin/activate
 ```
 
-3. Install dependencies:
+3. Install the required dependencies:
 ```bash
 pip install -r requirements.txt
 ```
 
-Dependencies include:
-- `numpy`
-- `nltk`
-- `matplotlib`, `plotly`
-- `wordcloud`
-- `pandas`
+Main dependencies:
+- numpy, pandas, nltk
+- matplotlib, plotly, wordcloud
 
 ---
 
-## 🚀 How to Run
+## How to Use
 
-1. Prepare or load your Wikipedia dataset (already available as `wikipedia_corpus.json`)
-2. Launch the notebook:
-
+1. (Optional) Regenerate a corpus from Wikipedia seeds:
 ```bash
-jupyter notebook notebook/lda_svi_analysis.ipynb
+python src/data_extraction.py
 ```
 
-3. Follow the notebook to:
-   - Load and vectorize the data
-   - Run the SVI algorithm
-   - Visualize the topics and interpret the results
+2. Launch the notebook:
+```bash
+jupyter notebook lda_svi_report.ipynb
+```
+
+3. In the notebook:
+   - Load and vectorize the dataset
+   - Run the custom SVI algorithm for LDA
+   - Visualize the results (topic distributions, word clouds)
 
 ---
 
-## 📊 Sample Outputs
+## Sample Outputs
 
-### 🧠 Top Words per Topic
+### Top Words per Topic
+Most probable words extracted from the topic-word distribution matrix $\lambda$.
 
-Each topic is represented by its most probable words, extracted from the variational posterior $\lambda$.
+### Word Clouds
+Visual representation of dominant words in each topic:
 
-### 🌫 Word Clouds
+![wordclouds](./images/wordclouds.png)
 
-Word clouds are generated to visualize the dominant terms of each topic:
+### Topic Frequency
+Distribution of the most dominant topics across the corpus:
 
-![wordclouds](./screenshots/wordclouds.png)
+![piechart](./images/piechart.png)
 
-### 📈 Topic Distributions
+### Topics per Seed
+How discovered topics are distributed by thematic seeds:
 
-Pie chart showing dominant topic frequencies across the corpus:
-
-![piechart](./screenshots/piechart.png)
-
-### 📊 Seed-wise Topic Breakdown
-
-Bar chart showing how topics vary across thematic seeds:
-
-![barplot](./screenshots/barplot.png)
+![barplot](./images/barplot.png)
 
 ---
 
-## ✍️ Notes
+## Notes
 
-- The training corpus includes ~1200 articles from 8 Wikipedia seeds (e.g. history, art, internet).
-- Topics are inferred using 500 iterations of SVI with:
-  - $K=10$ topics
-  - $\alpha = \eta = 1.0$
+- The dataset includes approximately 1200 articles extracted from 8 Wikipedia seed terms:
+  `["business", "culture", "history", "internet", "language", "nature", "politics", "sports"]`
+- SVI hyperparameters used in training:
+  - Number of topics: $K = 10$
+  - Dirichlet priors: $\alpha = \eta = 1.0$
   - Learning schedule: $\tau = 100$, $\kappa = 0.7$
+  - Training: 500 iterations
 
 ---
 
-## 🧠 About
+## About
 
-This project was developed as part of the “Modèles génératifs” specialization course in the M2 Master program.
+This project was developed for the M2 master's course **"Méthodes de simulation pour les modèles génératifs"**, taught by **Sylvain Le Corff**.
 
-It aims to combine:
-- **Probabilistic modeling**
-- **Variational inference**
-- **Natural language understanding**
-- **Data visualization**
+Course GitHub: [https://github.com/sylvainlc/22-generative_models](https://github.com/sylvainlc/22-generative_models)
+
+It combines:
+- Probabilistic modeling
+- Variational inference
+- Natural language understanding
+- Data visualization
+
+into a reproducible and interpretable topic modeling pipeline.
 
 ---
-
-## 📜 License
-
-MIT License. See `LICENSE` file for details.
